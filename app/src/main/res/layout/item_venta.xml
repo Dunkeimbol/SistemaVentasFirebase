@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_launcher_foreground"
+        android:contentDescription="logo" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="12dp">
+
+        <TextView
+            android:id="@+id/lblMinombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Nombre" />
+
+        <TextView
+            android:id="@+id/lblMitalla"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Talla" />
+
+        <TextView
+            android:id="@+id/lblMinumpares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="n pares" />
+
+        <TextView
+            android:id="@+id/lblMiventatotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0" />
+    </LinearLayout>
+
+</LinearLayout>
+
+
+
