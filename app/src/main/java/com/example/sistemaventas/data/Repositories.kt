@@ -27,7 +27,6 @@ data class VentaItem(
     val numpares: Int,
     val total: Double
 )
-
 class ClienteRepository(context: Context) {
     private val db = DbHelper(context).writableDatabase
 
@@ -39,7 +38,6 @@ class ClienteRepository(context: Context) {
         }
         return db.insert("Cliente", null, values)
     }
-
     fun getById(id: Long): Cliente? {
         val c: Cursor = db.query("Cliente", null, "idcliente=?", arrayOf(id.toString()), null, null, null)
         c.use {
@@ -54,7 +52,6 @@ class ClienteRepository(context: Context) {
         }
         return null
     }
-
     fun getAll(): List<Cliente> {
         val cursor = db.query("Cliente", null, null, null, null, null, "idcliente DESC")
         val list = mutableListOf<Cliente>()
@@ -73,10 +70,8 @@ class ClienteRepository(context: Context) {
         return list
     }
 }
-
 class ProductoRepository(context: Context) {
     private val db = DbHelper(context).writableDatabase
-
     fun insert(producto: Producto): Long {
         val values = ContentValues().apply {
             put("idcliente", producto.idcliente)
@@ -87,7 +82,6 @@ class ProductoRepository(context: Context) {
         }
         return db.insert("Producto", null, values)
     }
-
     fun listarVentas(): List<VentaItem> {
         val sql = """
             SELECT p.marca, c.nombre, p.talla, p.numpares, (p.precio * p.numpares) AS total

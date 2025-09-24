@@ -15,7 +15,6 @@ class AgregarVentaActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_agregar_venta)
-
         val spnCliente = findViewById<Spinner>(R.id.spnCliente)
         val spnMarca = findViewById<Spinner>(R.id.spnMarca)
         val spnTalla = findViewById<Spinner>(R.id.spnTalla)
@@ -23,21 +22,15 @@ class AgregarVentaActivity : AppCompatActivity() {
         val btnAgregar = findViewById<Button>(R.id.btnAgregarVenta)
         val btnListar = findViewById<Button>(R.id.btnListarVenta2)
         val btnInicio = findViewById<Button>(R.id.btnInicio1)
-
-
         val clienteRepo = ClienteRepository(this)
         val clientes = clienteRepo.getAll()
         val nombres = clientes.map { it.nombre }
         spnCliente.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, nombres)
-
-
         val marcas = listOf("Nike", "Adidas", "Fila")
         val tallas = listOf(38, 40, 42)
         spnMarca.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, marcas)
         spnTalla.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, tallas)
-
         val productoRepo = ProductoRepository(this)
-
         btnAgregar.setOnClickListener {
             if (clientes.isEmpty()) {
                 Toast.makeText(this, "Primero agregue clientes", Toast.LENGTH_SHORT).show()
@@ -55,7 +48,6 @@ class AgregarVentaActivity : AppCompatActivity() {
                 Toast.makeText(this, "Ingrese nº de pares", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             val precio = getPrecioPorMarcaTalla(marca, talla)
             productoRepo.insert(
                 Producto(
@@ -69,16 +61,13 @@ class AgregarVentaActivity : AppCompatActivity() {
             Toast.makeText(this, "Venta registrada", Toast.LENGTH_SHORT).show()
             txtNumPares.text.clear()
         }
-
         btnListar.setOnClickListener {
             startActivity(android.content.Intent(this, ListarVentaActivity::class.java))
         }
-
         btnInicio.setOnClickListener {
             startActivity(android.content.Intent(this, MainActivity::class.java))
         }
     }
-
     private fun getPrecioPorMarcaTalla(marca: String, talla: Int): Double {
         return when (marca.lowercase()) {
             "nike" -> when (talla) {
