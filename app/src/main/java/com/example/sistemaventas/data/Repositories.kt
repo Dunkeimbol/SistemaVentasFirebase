@@ -21,9 +21,12 @@ data class Producto(
 )
 
 data class VentaItem(
-    val logoMarca: String,
+    val idproducto: Long,
+    val idcliente: Long,
+    val marca: String,
     val nombreCliente: String,
     val talla: Int?,
+    val precio: Double,
     val numpares: Int,
     val total: Double
 )
@@ -37,6 +40,20 @@ class ClienteRepository(context: Context) {
             put("edad", cliente.edad)
         }
         return db.insert("Cliente", null, values)
+    }
+
+    fun update(cliente: Cliente): Int {
+        requireNotNull(cliente.idcliente)
+        val values = ContentValues().apply {
+            put("nombre", cliente.nombre)
+            put("genero", cliente.genero)
+            put("edad", cliente.edad)
+        }
+        return db.update("Cliente", values, "idcliente=?", arrayOf(cliente.idcliente.toString()))
+    }
+
+    fun deleteById(idcliente: Long): Int {
+        return db.delete("Cliente", "idcliente=?", arrayOf(idcliente.toString()))
     }
     fun getById(id: Long): Cliente? {
         val c: Cursor = db.query("Cliente", null, "idcliente=?", arrayOf(id.toString()), null, null, null)
@@ -82,9 +99,24 @@ class ProductoRepository(context: Context) {
         }
         return db.insert("Producto", null, values)
     }
+    fun update(producto: Producto): Int {
+        requireNotNull(producto.idproducto)
+        val values = ContentValues().apply {
+            put("idcliente", producto.idcliente)
+            put("marca", producto.marca)
+            put("talla", producto.talla)
+            put("precio", producto.precio)
+            put("numpares", producto.numpares)
+        }
+        return db.update("Producto", values, "idproducto=?", arrayOf(producto.idproducto.toString()))
+    }
+    fun deleteById(idproducto: Long): Int {
+        return db.delete("Producto", "idproducto=?", arrayOf(idproducto.toString()))
+    }
     fun listarVentas(): List<VentaItem> {
         val sql = """
-            SELECT p.marca, c.nombre, p.talla, p.numpares, (p.precio * p.numpares) AS total
+            SELECT p.idproducto, p.idcliente, p.marca, c.nombre, p.talla, p.precio, p.numpares,
+                   (p.precio * p.numpares) AS total
             FROM Producto p
             INNER JOIN Cliente c ON c.idcliente = p.idcliente
             ORDER BY p.idproducto DESC
@@ -95,11 +127,14 @@ class ProductoRepository(context: Context) {
             while (c.moveToNext()) {
                 data.add(
                     VentaItem(
-                        logoMarca = c.getString(0),
-                        nombreCliente = c.getString(1),
-                        talla = if (c.isNull(2)) null else c.getInt(2),
-                        numpares = c.getInt(3),
-                        total = c.getDouble(4)
+                        idproducto = c.getLong(0),
+                        idcliente = c.getLong(1),
+                        marca = c.getString(2),
+                        nombreCliente = c.getString(3),
+                        talla = if (c.isNull(4)) null else c.getInt(4),
+                        precio = c.getDouble(5),
+                        numpares = c.getInt(6),
+                        total = c.getDouble(7)
                     )
                 )
             }

@@ -17,9 +17,26 @@ class ListarVentaActivity : AppCompatActivity() {
 
         val repo = ProductoRepository(this)
         val data = repo.listarVentas()
-        recycler.adapter = ListaVentaAdapter(data)
+        recycler.adapter = ListaVentaAdapter(
+            data,
+            onClick = { venta ->
+                val intent = android.content.Intent(this, AgregarVentaActivity::class.java)
+                intent.putExtra("edit_idproducto", venta.idproducto)
+                intent.putExtra("edit_idcliente", venta.idcliente)
+                intent.putExtra("edit_marca", venta.marca)
+                intent.putExtra("edit_talla", venta.talla ?: 0)
+                intent.putExtra("edit_precio", venta.precio)
+                intent.putExtra("edit_numpares", venta.numpares)
+                startActivity(intent)
+            },
+            onLongClick = { venta ->
+                repo.deleteById(venta.idproducto)
+                recreate()
+            }
+        )
     }
 }
+
 
 
 

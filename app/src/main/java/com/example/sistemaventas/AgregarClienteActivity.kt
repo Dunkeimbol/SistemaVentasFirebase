@@ -29,6 +29,18 @@ class AgregarClienteActivity : AppCompatActivity() {
         )
 
         val repo = ClienteRepository(this)
+        // Modo edición si vienen extras
+        val editId = intent.getLongExtra("edit_idcliente", -1L).takeIf { it > 0 }
+        val editNombre = intent.getStringExtra("edit_nombre")
+        val editGenero = intent.getStringExtra("edit_genero")
+        val editEdad = intent.getIntExtra("edit_edad", -1)
+        if (editId != null) {
+            btnAgregar.text = "Modificar"
+            txtNombre.setText(editNombre ?: "")
+            if (editEdad >= 0) txtEdad.setText(editEdad.toString())
+            val idxGen = listOf("M", "F").indexOf(editGenero)
+            if (idxGen >= 0) spnGenero.setSelection(idxGen)
+        }
 
         btnAgregar.setOnClickListener {
             val nombre = txtNombre.text.toString().trim()
@@ -39,8 +51,13 @@ class AgregarClienteActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             val edad = edadText.toIntOrNull()
-            repo.insert(Cliente(nombre = nombre, genero = genero, edad = edad))
-            Toast.makeText(this, "Cliente agregado", Toast.LENGTH_SHORT).show()
+            if (editId != null) {
+                repo.update(Cliente(idcliente = editId, nombre = nombre, genero = genero, edad = edad))
+                Toast.makeText(this, "Cliente modificado", Toast.LENGTH_SHORT).show()
+            } else {
+                repo.insert(Cliente(nombre = nombre, genero = genero, edad = edad))
+                Toast.makeText(this, "Cliente agregado", Toast.LENGTH_SHORT).show()
+            }
             txtNombre.text.clear()
             txtEdad.text.clear()
             spnGenero.setSelection(0)
@@ -53,6 +70,7 @@ class AgregarClienteActivity : AppCompatActivity() {
         }
     }
 }
+
 
 
 

@@ -31,6 +31,23 @@ class AgregarVentaActivity : AppCompatActivity() {
         spnMarca.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, marcas)
         spnTalla.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, tallas)
         val productoRepo = ProductoRepository(this)
+        // Detectar modo edición
+        val editId = intent.getLongExtra("edit_idproducto", -1L).takeIf { it > 0 }
+        val editIdCliente = intent.getLongExtra("edit_idcliente", -1L)
+        val editMarca = intent.getStringExtra("edit_marca")
+        val editTalla = intent.getIntExtra("edit_talla", 0)
+        val editNumPares = intent.getIntExtra("edit_numpares", 0)
+
+        if (editId != null) {
+            btnAgregar.text = "Modificar"
+            val idxCliente = clientes.indexOfFirst { it.idcliente == editIdCliente }
+            if (idxCliente >= 0) spnCliente.setSelection(idxCliente)
+            val idxMarca = marcas.indexOf(editMarca)
+            if (idxMarca >= 0) spnMarca.setSelection(idxMarca)
+            val idxTalla = tallas.indexOf(editTalla)
+            if (idxTalla >= 0) spnTalla.setSelection(idxTalla)
+            if (editNumPares > 0) txtNumPares.setText(editNumPares.toString())
+        }
         btnAgregar.setOnClickListener {
             if (clientes.isEmpty()) {
                 Toast.makeText(this, "Primero agregue clientes", Toast.LENGTH_SHORT).show()
@@ -49,16 +66,30 @@ class AgregarVentaActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
             val precio = getPrecioPorMarcaTalla(marca, talla)
-            productoRepo.insert(
-                Producto(
-                    idcliente = clienteId,
-                    marca = marca,
-                    talla = talla,
-                    precio = precio,
-                    numpares = numPares
+            if (editId != null) {
+                productoRepo.update(
+                    Producto(
+                        idproducto = editId,
+                        idcliente = clienteId,
+                        marca = marca,
+                        talla = talla,
+                        precio = precio,
+                        numpares = numPares
+                    )
                 )
-            )
-            Toast.makeText(this, "Venta registrada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Venta modificada", Toast.LENGTH_SHORT).show()
+            } else {
+                productoRepo.insert(
+                    Producto(
+                        idcliente = clienteId,
+                        marca = marca,
+                        talla = talla,
+                        precio = precio,
+                        numpares = numPares
+                    )
+                )
+                Toast.makeText(this, "Venta registrada", Toast.LENGTH_SHORT).show()
+            }
             txtNumPares.text.clear()
         }
         btnListar.setOnClickListener {
