@@ -8,15 +8,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sistemaventas.R
-import com.example.sistemaventas.data.VentaItem
+import com.example.sistemaventas.data.VentaItemFirebase
 import android.os.Handler
 import android.os.Looper
 
-class ListaVentaAdapter(
-    private val data: List<VentaItem>,
-    private val onClick: (VentaItem) -> Unit,
-    private val onLongClick: (VentaItem) -> Unit
-) : RecyclerView.Adapter<ListaVentaAdapter.VentaVH>() {
+class ListaVentaFirebaseAdapter(
+    private val data: List<VentaItemFirebase>,
+    private val onClick: (VentaItemFirebase) -> Unit,
+    private val onLongClick: (VentaItemFirebase) -> Unit
+) : RecyclerView.Adapter<ListaVentaFirebaseAdapter.VentaVH>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VentaVH {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_venta, parent, false)
@@ -28,18 +28,18 @@ class ListaVentaAdapter(
     override fun getItemCount(): Int = data.size
     class VentaVH(
         itemView: View,
-        private val onClick: (VentaItem) -> Unit,
-        private val onLongClick: (VentaItem) -> Unit
+        private val onClick: (VentaItemFirebase) -> Unit,
+        private val onLongClick: (VentaItemFirebase) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val imgLogo: ImageView = itemView.findViewById(R.id.imgLogo)
         private val lblNombre: TextView = itemView.findViewById(R.id.lblMinombre)
         private val lblTalla: TextView = itemView.findViewById(R.id.lblMitalla)
         private val lblNumPares: TextView = itemView.findViewById(R.id.lblMinumpares)
         private val lblTotal: TextView = itemView.findViewById(R.id.lblMiventatotal)
-        private var bound: VentaItem? = null
+        private var bound: VentaItemFirebase? = null
         private val handler = Handler(Looper.getMainLooper())
         private var longTriggered = false
-        fun bind(item: VentaItem) {
+        fun bind(item: VentaItemFirebase) {
             bound = item
             lblNombre.text = item.nombreCliente
             lblTalla.text = "Talla ${item.talla ?: 0}"
@@ -75,6 +75,4 @@ class ListaVentaAdapter(
         }
     }
 }
-
-
 
