@@ -66,13 +66,11 @@ class AgregarVentaFirebaseActivity : AppCompatActivity() {
 
             val precio = getPrecioPorMarcaTalla(marca, talla?.toInt() ?: 0)
 
-            // Obtener datos de edición
             val editId = intent.getStringExtra("edit_idproducto")
 
             CoroutineScope(Dispatchers.Main).launch {
                 try {
                     if (!editId.isNullOrEmpty()) {
-                        // Modo edición
                         val producto = ProductoFirebase(
                             idproducto = editId,
                             idcliente = clienteId,
@@ -88,7 +86,6 @@ class AgregarVentaFirebaseActivity : AppCompatActivity() {
                             Toast.makeText(this@AgregarVentaFirebaseActivity, "Error al modificar venta", Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        // Modo inserción
                         val producto = ProductoFirebase(
                             idcliente = clienteId,
                             marca = marca,
